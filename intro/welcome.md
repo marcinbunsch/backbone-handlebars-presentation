@@ -7,7 +7,5 @@
 
 ## marcin@futuresimple.com
 
-> 
-
 ## github.com/marcinbunsch
 ## twitter.com/marcinbunsch
