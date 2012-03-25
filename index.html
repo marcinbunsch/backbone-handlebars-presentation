@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-  <title></title>
+  <title>Backbone + Handlebars</title>
 
   <meta name="viewport" content="width=device-width"/>
 
@@ -30,6 +30,8 @@
   <link type="text/css" href="./css/theme/ui.all.css" media="screen" rel="stylesheet" />
   <link type="text/css" href="./css/sh_style.css" rel="stylesheet" >
 
+  
+    <link rel="stylesheet" href="file/styles.css" type="text/css"/>
   
 
   
@@ -75,7 +77,255 @@
 </div>
 
 <div id="slides" class="offscreen" style="display:none;">
+<div class="slide" data-transition="none"><div class="content" ref="intro/welcome/1">
+<h1>Backbone + Handlebars</h1></div>
+</div><div class="slide" data-transition="none"><div class="content small" ref="intro/welcome/2">
+<h1>Marcin Bunsch</h1>
+
+<h2>marcin@futuresimple.com</h2>
+
+<h2>github.com/marcinbunsch</h2>
+
+<h2>twitter.com/marcinbunsch</h2></div>
+</div><div class="slide" data-transition="none"><div class="content center" ref="backbone/intro/1">
+<p><img src="./file/backbone/backbone.png" alt="f"/></p></div>
+</div><div class="slide" data-transition="none"><div class="content small bullets incremental" ref="backbone/intro/2">
+<h1>What is Backbone?</h1>
+
+<ul>
+<li>Client-side MV* Framework</li>
+<li>Created by Jeremy Ashkenas</li>
+</ul>
 </div>
+</div><div class="slide" data-transition="none"><div class="content" ref="backbone/intro/3">
+<h1>Backbone Models</h1></div>
+</div><div class="slide" data-transition="none"><div class="content small code fixed-top" ref="backbone/intro/4">
+<pre class="sh_javascript"><code>
+var Todo = Backbone.Model.extend({
+
+  // Default attributes for the todo item.
+  defaults: function() {
+    return {
+      title: "empty todo...",
+      done: false
+    };
+  },
+
+  // Toggle the `done` state of this todo item.
+  toggle: function() {
+    this.save({done: !this.get("done")});
+  }
+
+});</code></pre></div>
+</div><div class="slide" data-transition="none"><div class="content smaller code" ref="backbone/intro/5">
+<pre class="sh_javascript"><code>
+var todo = new Todo({ title: "Deliver presentation" })
+togo.get('title') // =&gt; "Deliver presentation"</code></pre></div>
+</div><div class="slide" data-transition="none"><div class="content" ref="backbone/intro/6">
+<h1>Backbone Collections</h1></div>
+</div><div class="slide" data-transition="none"><div class="content small code fixed-top" ref="backbone/intro/7">
+<pre class="sh_javascript"><code>
+var TodoCollection = Backbone.Collection.extend({
+
+  // Reference to this collection's model.
+  model: Todo,
+
+  // Filter down the list of all
+  // todo items that are finished.
+  done: function() {
+    return this.filter(function(todo){ 
+      return todo.get('done'); 
+    });
+  }
+
+});
+
+var todos = new TodoCollection()
+todos.fetch()</code></pre></div>
+</div><div class="slide" data-transition="none"><div class="content" ref="backbone/intro/8">
+<h1>Backbone Controllers</h1></div>
+</div><div class="slide" data-transition="none"><div class="content bullets fixed-top" ref="backbone/intro/9">
+<h1>Backbone Controllers</h1>
+
+<ul>
+<li><img src="./file/backbone/wat.jpeg" alt="f"/></li>
+</ul>
+</div>
+</div><div class="slide" data-transition="none"><div class="content bullets fixed-top" ref="backbone/intro/10">
+<h1>Backbone Controllers</h1>
+
+<ul>
+<li><img src="./file/backbone/controllers.png" alt="f"/></li>
+</ul>
+</div>
+</div><div class="slide" data-transition="none"><div class="content" ref="backbone/intro/11">
+<h1>Backbone Routers</h1></div>
+</div><div class="slide" data-transition="none"><div class="content small" ref="backbone/intro/12">
+<pre class="sh_javascript"><code>
+var AppRouter = Backbone.Router.extend({
+  routes: {
+    '':     'showTodos',
+    'help': 'showHelp'
+  },
+  showTodos: function() {
+    new TodosView();
+  },
+  showHelp: function() {
+    new HelpView();
+  }
+})</code></pre></div>
+</div><div class="slide" data-transition="none"><div class="content" ref="backbone/intro/13">
+<h1>Backbone Views</h1></div>
+</div><div class="slide" data-transition="none"><div class="content smaller fixed-top" ref="backbone/intro/14">
+<h2>Backbone Views - templating</h2>
+
+<pre class="sh_javascript"><code>
+var TodoView = Backbone.View.extend({
+
+  render: function() {
+    var source   = $('#mainViewTemplate').html()
+    var template = _.template(source);
+    var data     = this.model.toJSON()
+    var html     = template(data);
+    this.$el.html(html);
+    return this;
+  }
+
+})
+
+var todo = new Todo();
+todo.set('title', 'MOAR COFFEE');
+
+var todoView = new TodoView({ model: todo });</code></pre></div>
+</div><div class="slide" data-transition="none"><div class="content smaller fixed-top" ref="backbone/intro/15">
+<h2>Backbone Views - events</h2>
+
+<pre class="sh_javascript"><code>
+var TodoView = Backbone.View.extend({
+
+    // ...
+
+    events: {
+      "click .toggle"   : "toggleDone",
+    },
+
+    // Toggle the `"done"` state of the model.
+    toggleDone: function() {
+      this.model.toggle();
+    }
+
+});</code></pre></div>
+</div><div class="slide" data-transition="none"><div class="content smaller fixed-top" ref="backbone/intro/16">
+<h2>Backbone Views - binding</h2>
+
+<pre class="sh_javascript"><code>
+var TodoView = Backbone.View.extend({
+
+  initialize: function() {
+    this.model.bind('change', this.render, this);
+  }
+
+})</code></pre></div>
+</div><div class="slide" data-transition="none"><div class="content smaller fixed-top" ref="backbone/intro/17">
+<h2>Backbone Views - templating again</h2>
+
+<pre class="sh_javascript"><code>
+var TodoView = Backbone.View.extend({
+
+  render: function() {
+    var source   = $('#mainViewTemplate').html()
+    var template = _.template(source);
+    var data     = this.model.toJSON()
+    var html     = template(data);
+    this.$el.html(html);
+    return this;
+  }
+
+})</code></pre></div>
+</div><div class="slide" data-transition="none"><div class="content center" ref="handlebars/intro/1">
+<p><img src="./file/handlebars/handlebars.png" alt="f"/></p></div>
+</div><div class="slide" data-transition="none"><div class="content small bullets incremental" ref="handlebars/intro/2">
+<h1>Why Handlebars?</h1>
+
+<ul>
+<li>Templates are clean</li>
+<li>Helpers store the logic</li>
+<li>Precompilation with a light runtime</li>
+</ul>
+</div>
+</div><div class="slide" data-transition="none"><div class="content smaller fixed-top" ref="handlebars/intro/3">
+<h1>todos.handlebars</h1>
+
+<pre class="sh_html"><code>
+&lt;div class="view"&gt;
+  &lt;input class="toggle" type="checkbox" {{checkedIf done}}&gt;
+  &lt;label&gt;{{title}}&lt;/label&gt;
+  &lt;a class="destroy"&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;input class="edit" type="text" value="{{title}}" /&gt;</code></pre></div>
+</div><div class="slide" data-transition="none"><div class="content smaller fixed-top" ref="handlebars/intro/4">
+<h1>todos.handlebars</h1>
+
+<pre class="sh_html"><code>
+&lt;div class="view"&gt;
+  &lt;input class="toggle" type="checkbox" checked="checked"&gt;
+  &lt;label&gt;KILL ALL HUMANS&lt;/label&gt;
+  &lt;a class="destroy"&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;input class="edit" type="text" value="KILL ALL HUMANS" /&gt;</code></pre></div>
+</div><div class="slide" data-transition="none"><div class="content code center" ref="handlebars/intro/5">
+<h2>handlebars dir -f output.js</h2></div>
+</div><div class="slide" data-transition="none"><div class="content code center" ref="handlebars/intro/6">
+<pre class="sh_javascript"><code>Handlebars.templates['todos']</code></pre></div>
+</div><div class="slide" data-transition="none"><div class="content smaller fixed-top" ref="handlebars/intro/7">
+<h1>Applied</h1>
+
+<pre class="sh_javascript"><code>
+var TodoView = Backbone.View.extend({
+  template: 'todos',
+
+  render: function() {
+    var template = Handlebars.templates[this.template]
+    var data     = this.model.toJSON()
+    var html     = template(data);
+    this.$el.html(html);
+    return this;
+  }
+
+});</code></pre></div>
+</div><div class="slide" data-transition="none"><div class="content smaller fixed-top" ref="handlebars/intro/8">
+<h1>OMG Pattern</h1>
+
+<pre class="sh_javascript"><code>
+var HandlebarsView = Backbone.View.extend({
+
+  render: function() {
+    var template = Handlebars.templates[this.template]
+    var data     = this.model.toJSON()
+    var html     = template(data);
+    this.$el.html(html);
+    return this;
+  }
+
+});</code></pre></div>
+</div><div class="slide" data-transition="none"><div class="content smaller fixed-top" ref="handlebars/intro/9">
+<h1>Profit!</h1>
+
+<pre class="sh_javascript"><code>
+var TodoView = HandlebarsView.extend({
+  template: 'todos'
+});</code></pre></div>
+</div><div class="slide" data-transition="none"><div class="content center" ref="agility/about/1">
+<h1>Agility</h1></div>
+</div><div class="slide" data-transition="none"><div class="content center" ref="agility/about/2">
+<h2>github.com/futuresimple/agility.js</h2></div>
+</div><div class="slide" data-transition="none"><div class="content small center" ref="finish/done/1">
+<h2>github.com/marcinbunsch/backbone-handlebars-presentation</h2>
+
+<h2>github.com/marcinbunsch/backbone-handlebars-demo</h2></div>
+</div><div class="slide" data-transition="none"><div class="content center" ref="finish/done/2">
+<h1>Questions?</h1></div>
+</div></div>
 
 </body>
 </html>
