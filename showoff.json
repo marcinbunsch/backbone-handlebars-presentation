@@ -1,0 +1,6 @@
+{ "name": "Backbone + Handlebars", "sections": [
+  {"section":"intro"},
+  {"section":"backbone"},
+  {"section":"handlebars"},
+  {"section":"agility"}
+]}
